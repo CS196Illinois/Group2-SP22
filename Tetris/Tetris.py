@@ -46,7 +46,11 @@ class Board:
         return False
 
     def lineClear(self):  # check if a horizontal line is fullfilled and delete it, and add scores. --Qi Chen
-        pass
+        for i in self.board:
+            if i == [1 for n in range(14)]:
+                scores += 1  # replace '1' by the specific marks.
+                for m in range(1, self.board.index(i)):
+                    self.board[m] = self.board[m-1]
 
 
 class Piece:
