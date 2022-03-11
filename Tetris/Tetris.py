@@ -37,7 +37,7 @@ class Board:
                 board_temp[m][n] = board[m][n] + piece[m - x][n - y]
         return board_temp
 
-    def hit(board, piece, coords):
+    def hit(self, board, piece, coords):
         board_temp = self.add_to_board(board, piece, coords)
         for m in range(20):
             for n in range(10):
@@ -104,6 +104,7 @@ test = adjust_coords(I, coords)
 print(test)
 
 while True:
+    pass
     # generate initial pieces, use link list to generate 200 or so pieces initally -- Evan
     # default coordinates for where pieces drop--row 22 to 23 -- Evan
     # do default coordinates change based on piece? what is the default position for each piece? -- Evan
