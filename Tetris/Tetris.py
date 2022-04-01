@@ -18,6 +18,11 @@ scores = 0
 
 
 class Board:
+
+    level = 1
+
+    gameStart = false
+    
     def __init__(self):
         board = [[0 for n in range(14)] for m in range(22)]
         for i in range(14):
@@ -103,8 +108,31 @@ test = adjust_coords(I, coords)
 #print(*test, sep = "\n")
 print(test)
 
+counter = 0
+fps = 25
+
+#Game Loop
 while True:
-    pass
+    #Moving Pieces Down, can add level system very easy
+    if (counter % (fps // board.level) == 0) {
+        if board.gameStart {
+            piece.push_down
+        }
+    }
+    count++
+
+    #Inputs will be controlled using some sofware, I assume pygame
+    if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_UP:
+                piece.rot_cw
+            if event.key == pygame.K_DOWN:
+                piece.push_down
+            if event.key == pygame.K_LEFT:
+                piece.move_left
+            if event.key == pygame.K_RIGHT:
+                piece.move_right
+
+                
     # generate initial pieces, use link list to generate 200 or so pieces initally -- Evan
     # default coordinates for where pieces drop--row 22 to 23 -- Evan
     # do default coordinates change based on piece? what is the default position for each piece? -- Evan
