@@ -1,14 +1,48 @@
-from dataclasses import dataclass
-from queue import queue
+# from dataclasses import dataclass
+import queue
 from typing_extensions import Self
-from random import random
+import random
+import pygame
 
 
 class Piece ():
     def __init__(self, n_grid, n_color):
         self.n_grid = n_grid
         self.n_color = n_color
-    # include rotate functions, etc
+    def rot_ccw(self, piece):  # rotate couterclockwise
+        rotpiece = [[0 for n in range(4)] for m in range(4)]
+        for m in range(0, 4):
+            for n in range(0, 4):
+                rotpiece[m][n] = piece[n][3 - m]
+        return rotpiece
+
+    def rot_cw(self, piece):  # rotate clockwise
+        rotpiece = [[0 for n in range(4)] for m in range(4)]
+        for m in range(0, 4):
+            for n in range(0, 4):
+                rotpiece[m][n] = piece[3 - n][m]
+        return rotpiece
+
+    def move_right(self, board, piece, coords):
+        x, y = coords
+        if Board.hit(board, piece, (x, y+1)) == False:
+            return (x, y+1)
+        else:
+            return (x, y)
+
+    def move_left(self, board, piece, coords):
+        x, y = coords
+        if Board.hit(board, piece, (x, y-1)) == False:
+            return (x, y-1)
+        else:
+            return (x, y)
+
+    def push_down(self, board, piece, coords):
+        x, y = coords
+        for i in range(15):
+            if Board.hit(board, piece, (x + i, y)) == True:
+                return (x+(i-1), y)
+
 
 def startGame():
     queue = queue()
@@ -67,7 +101,7 @@ class Board:
 
     level = 1
 
-    gameStart = false
+    gameStart = False
     
     def __init__(self):
         board = [[0 for n in range(14)] for m in range(22)]
@@ -103,80 +137,36 @@ class Board:
                 for m in range(1, self.board.index(i)):
                     self.board[m] = self.board[m-1]
 
-
-class Piece:
-    def __init__(self, setShape) -> None:
-        self.shape = setShape
-
-    def rot_ccw(self, piece):  # rotate couterclockwise
-        rotpiece = [[0 for n in range(4)] for m in range(4)]
-        for m in range(0, 4):
-            for n in range(0, 4):
-                rotpiece[m][n] = piece[n][3 - m]
-        return rotpiece
-
-    def rot_cw(self, piece):  # rotate clockwise
-        rotpiece = [[0 for n in range(4)] for m in range(4)]
-        for m in range(0, 4):
-            for n in range(0, 4):
-                rotpiece[m][n] = piece[3 - n][m]
-        return rotpiece
-
-    def move_right(self, board, piece, coords):
-        x, y = coords
-        if Board.hit(board, piece, (x, y+1)) == False:
-            return (x, y+1)
-        else:
-            return (x, y)
-
-    def move_left(self, board, piece, coords):
-        x, y = coords
-        if Board.hit(board, piece, (x, y-1)) == False:
-            return (x, y-1)
-        else:
-            return (x, y)
-
-    def push_down(self, board, piece, coords):
-        x, y = coords
-        for i in range(15):
-            if Board.hit(board, piece, (x + i, y)) == True:
-                print(x + i, y)
-                return (x+(i-1), y)
-
-
 # save scores as a file if it's higher than the record
-
 
 x, y = 0, 3
 coords = (x, y)
 
-test = adjust_coords(I, coords)
-#print(*test, sep = "\n")
-print(test)
 
-counter = 0
+#print(*test, sep = "\n")
+
+
+count = 0
 fps = 25
 
 #Game Loop
 while True:
     #Moving Pieces Down, can add level system very easy
-    if (counter % (fps // board.level) == 0) {
-        if board.gameStart {
-            piece.push_down
-        }
-    }
-    count++
+    if (count % (fps // Board.level) == 0):
+        if Board.gameStart: 
+            Piece.push_down
+    count += 1
 
     #Inputs will be controlled using some sofware, I assume pygame
     if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_UP:
-                piece.rot_cw
+                Piece.rot_cw
             if event.key == pygame.K_DOWN:
-                piece.push_down
+                Piece.push_down
             if event.key == pygame.K_LEFT:
-                piece.move_left
+                Piece.move_left
             if event.key == pygame.K_RIGHT:
-                piece.move_right
+                Piece.move_right
 
                 
     # generate initial pieces, use link list to generate 200 or so pieces initally -- Evan
