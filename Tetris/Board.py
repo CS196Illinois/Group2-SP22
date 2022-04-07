@@ -4,11 +4,14 @@ class Board:
     gameStart = False
 
     def __init__(self):
-        board = [[0 for n in range(14)] for m in range(24)]
-        for i in range(14):
-            for j in range(24):
-                if i < 2 or j > 19 or i > 11:
-                    board[j][i] = 5
+        height = 20
+        width = 10
+        border = 2
+        board = [[0 for n in range(width + border * 2)] for m in range(height + border)]
+        for i in range(width + border * 2):
+            for j in range(height + border):
+                if i not in range(border, width + border) or j not in range(0, height):
+                    board[j][i] = 1
         print(*board, sep="\n")
 
     def add_to_board(self, board, piece, coords):
@@ -24,9 +27,9 @@ class Board:
 
     def hit(self, board, piece, coords):
         board_temp = self.add_to_board(board.copy(), piece, coords)
-        for m in range(22):
-            for n in range(14):
-                if board_temp[m][n] == 2 or board_temp[m][n] == 6:
+        for m in range(self.height + self.border):
+            for n in range(self.wdith + self.border):
+                if board_temp[m][n] % 2 != 0:
                     return True
         return False
 
