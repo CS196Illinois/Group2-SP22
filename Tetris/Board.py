@@ -12,7 +12,6 @@ class Board:
             for j in range(height + border):
                 if i not in range(border, width + border) or j not in range(0, height):
                     board[j][i] = 1
-        print(*board, sep="\n")
 
     def add_to_board(self, board, piece, coords):
         x, y = coords
@@ -39,3 +38,11 @@ class Board:
                 scores += 1  # replace '1' by the specific marks.
                 for m in range(1, self.board.index(i)):
                     self.board[m] = self.board[m-1]
+    
+    def remove_from_board(self, board, piece, coords):
+        x, y = coords
+        board_temp = board.copy()
+        for m in range(x, x+4):
+            for n in range(y, y+4):
+                board_temp[m][n] = board[m][n] - piece[m - x][n - y]
+        return board_temp
