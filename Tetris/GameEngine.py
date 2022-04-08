@@ -12,56 +12,68 @@ board = []
 init = True
 coords = (0, 6)
 
-#Moving Pieces Down, can add level system later on by increasing fps
+# Moving Pieces Down, can add level system later on by increasing fps
 
 display = pygame.display.set_mode((300, 300))
 pygame.display.set_caption('idk what im doing')
 while gameOn == False:
     for event in pygame.event.get():
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_SPACE:
-                    gameOn = True
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_SPACE:
+                gameOn = True
 
-gameOnfr = False
-while gameOn == True:
-    if init: #initializes board
-        Board()
-        Piece()
+print(*board, sep="\n")
+while gameOn:
+    if init:  # initializes board & pieces/queue
+        board = Board()  # is this work 
         Piece.add_to_queue(Piece)
         init = False
         piece = Piece.piece_queue.get()
-        board = Board.add_to_board(board, piece, (0,6))
-        coords = (1,6)
-    
+        board = Board.add_to_board(board, piece, (0, 6))
+        coords = (1, 6)
+    count += 1
     for event in pygame.event.get():
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_UP:
-                piece = Piece.rot_cw(board, piece, coords)
-                board = Board.add_to_board(board, piece, coords)
+                board.remove_from_board(piece, coords)
+                piece.rot_cw(board, coords)
+                board.add_to_board(piece, coords)
             if event.key == pygame.K_DOWN:
-                coords = Piece.push_down(board, piece, coords)
-                board = Board.add_to_board(board, piece, coords)
+                board.remove_from_board(piece, coords)
+                coords = piece.push_down(board, coords)
+                board.add_to_board(piece, coords)
+                Placed = True
             if event.key == pygame.K_LEFT:
-                coords = Piece.move_left(board, piece, coords)
-                board = Board.add_to_board(board, piece, coords)
+                board.remove_from_board(piece, coords)
+                coords = piece.move_left(board, coords)
+                board.add_to_board(piece, coords)
             if event.key == pygame.K_RIGHT:
-                coords = Piece.move_right(board, piece, coords)
-                board = Board.add_to_board(board, piece, coords)
+                board.remove_from_board(piece, coords)
+                coords = piece.move_right(board, coords)
+                board.add_to_board(piece, coords)
             if event.key == pygame.K_SPACE:
                 gameOn = False
                 init = True
     if (count % (fps // Board.level) == 0):
+        print(*board, sep="\n")
         if gameOn:
-            board = Board.remove_from_board(Board, board, piece, coords)
-            coords = Piece.move_down(Piece, board, piece, coords)
-            board = Board.add_to_board(Board, board, piece, coords)
-            print(*board, sep="\n")
+            coords = Piece.move_down(piece, coords)
+            x, y = coords
+            if not Board.hit(piece, coords):
+                board.remove_from_board(piece, (x - 1, y))
+                board.add_to_board(piece, coords)
+            else:
+                Placed = True
+                board.add_to_board(piece, coords)
 
-    if Placed: #if the piece before was placed 'officially' on the board, this will name a new piece and place it on the board
+    if Placed:  # if the piece before was placed 'officially' on the board, this will name a new piece and place it on the board
         Placed = False
-        coords = (0,6)
-        piece = Piece.piece_queue.get()
-        board = Board.add_to_board(board, piece, coords)
+        if Board.hit(piece, (0, 6)):  # Gameover
+            gameOn = False
+        else:
+            coords = (0, 6)
+            piece = Piece.piece_queue.get()
+            board = Board.add_to_board(board, piece, coords)
 
-    
- 
+    if Board.piece_queue.qsize < 5:  # if the queue starts to run out of pieces,
+        Piece.add_to_queue(Piece)  # adds 100 more pieces
