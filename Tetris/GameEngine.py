@@ -25,7 +25,7 @@ while gameOn == False:
 print(*board, sep="\n")
 while gameOn:
     if init:  # initializes board & pieces/queue
-        board = Board()  # is this work 
+        board = Board()  # idk if this works
         Piece.add_to_queue(Piece)
         init = False
         piece = Piece.piece_queue.get()

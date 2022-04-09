@@ -18,7 +18,7 @@ class Board:
         for m in range(x, x+4):
             for n in range(y, y+4):
                 # m, n are position of current slot in  board's coordinate; x, y are that in piece's coordinate
-                self[m][n] = self[m][n] + piece[m - x][n - y]
+                self.board[m][n] = self.board[m][n] + piece[m - x][n - y]
 
     def hit(self, piece, coords):
         board_temp = self.add_to_board(
@@ -30,7 +30,7 @@ class Board:
         return False
 
     def lineClear(self):  # check if a horizontal line is fullfilled and delete it, and add scores. --Qi Chen
-        for i in self:
+        for i in self.board:
             lineFull = True
             for j in i:
                 if j == 0:
@@ -46,4 +46,4 @@ class Board:
         for m in range(x, x+4):
             for n in range(y, y+4):
                 # m, n are position of current slot in  board's coordinate; x, y are that in piece's coordinate
-                self[m][n] = self[m][n] - piece[m - x][n - y]
+                self.board[m][n] = self.board[m][n] - piece[m - x][n - y]
