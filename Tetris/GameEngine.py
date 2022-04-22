@@ -3,16 +3,6 @@ from Piece import Piece
 import pygame
 
 class GameEngine():
-    def __init__(self):
-        count = 0
-        fps = 25
-        Piece.add_to_queue()
-        init = False
-        score = 0
-        piece = Piece.piece_queue.get()
-        board = Board.add_to_board(piece, (0, 6))
-        coords = (1, 6)
-     
     def up_key(board, piece, coords):
         board.remove_from_board(piece, coords)
         piece.rot_cw(board.list2d, coords)
