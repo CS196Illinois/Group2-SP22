@@ -3,115 +3,66 @@ import queue
 # from typing_extensions import Self
 import random
 import pygame
-import Piece
-import Board
+from Piece import Piece
+from Board import Board
+from GameEngine import GameEngine
 
-queue = []
-i_piece = Piece([
-    [0, 1, 0, 0],
-    [0, 1, 0, 0],
-    [0, 1, 0, 0],
-    [0, 1, 0, 0]])
-t_piece = Piece([
-    [0, 3, 0, 0],
-    [3, 3, 3, 0],
-    [0, 0, 0, 0],
-    [0, 0, 0, 0]
-])
-z_piece = Piece([
-    [5, 5, 0, 0],
-    [0, 5, 5, 0],
-    [0, 0, 0, 0],
-    [0, 0, 0, 0]
-])
-s_piece = Piece([
-    [0, 7, 7, 0],
-    [7, 7, 0, 0],
-    [0, 0, 0, 0],
-    [0, 0, 0, 0]
-])
-j_piece = Piece([
-    [0, 9, 0, 0],
-    [0, 9, 0, 0],
-    [9, 9, 0, 0],
-    [0, 0, 0, 0]
-])
-o_piece = Piece([
-    [0, 0, 0, 0],
-    [0, 11, 11, 0],
-    [0, 11, 11, 0],
-    [0, 0, 0, 0]
-])
-l_piece = Piece([
-    [13, 0, 0, 0],
-    [13, 13, 13, 0],
-    [0, 0, 0, 0],
-    [0, 0, 0, 0]
-])
-
-
-def gameStart():
-    y = random.randint(0, 6)
-    all_pieces = [t_piece, i_piece, z_piece,
-                  s_piece, j_piece, o_piece, l_piece]
-    queue.append(all_pieces[y])
-
-
-scores = 0
-
-# try to read highest record from saved file,jump over this step if fail
-
-
-# save scores as a file if it's higher than the record
-
-
-count = 0
-fps = 25
-gameOn = True
-
+gameOn = False
+pygame.init()
+display = pygame.display.set_mode((300, 300)) #initializes a display for pygame
+pygame.display.set_caption('')
+while gameOn == False:
+    for event in pygame.event.get():
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_SPACE:
+                gameOn = True
 
 # Game Loop
+count = 0
+fps = 25
+Piece = Piece()
+Piece.add_to_queue()
+score = 0
+piece = Piece.piece_queue.get()
+board = Board()
+board = board.add_to_board(piece, (0, 6))
+coords = (1, 6)
+Placed = False
+GameEngine()
 while gameOn:
-    # adds pieces to queue
-    # Moving Pieces Down, can add level system very easy
-    if (count % (fps // Board.level) == 0):
-        if board.gameStart:
-            piece.push_down
-    count += 1
-
-    # Inputs will be controlled using some sofware, I assume pygame
+    #inputs
     if pygame.event.type == pygame.KEYDOWN:
         if pygame.event.key == pygame.K_UP:
-            Piece.rot_cw
+            GameEngine.up_key(board, piece, coords)
+            board.sprint()
         if pygame.event.key == pygame.K_DOWN:
-            Piece.push_down
+            GameEngine.down_key(board, piece, coords)
+            board.sprint()
         if pygame.event.key == pygame.K_LEFT:
-            Piece.move_left
+            GameEngine.left_key(board, piece, coords)
+            board.sprint()
         if pygame.event.key == pygame.K_RIGHT:
-            Piece.move_right
-        if pygame.event.key == pygame.K_SPACE:
+            GameEngine.right_key(board, piece, coords)
+            board.sprint()
+        if pygame.event.key == pygame.K_SPACE: #terminate game midway
+            board.sprint()
+            gameOn = False            
+
+    if (count % (fps // Board.level) == 0):
+        board.sprint()
+        if not Board.hit(piece, coords): # checks that moving down won't hit the board, if it doesnt, moves it down
+            GameEngine.move_down(board, piece, coords)
+        else: #if it will hit the board by moving down, keeps where it is and starts placed sequence for new piece
+            Placed = True
+
+    if Placed:  # if the piece before was placed 'officially' on the board, this will name a new piece and place it on the top of board
+        Placed = False
+        if Board.hit(piece, (0, 6)):  # Gameover if cannot fit piece at top of board
             gameOn = False
-        if pygame.event.key == pygame.K_ESCAPE:
-            piece_queue = 0  # piece that is pulled from queue, increases when piece is placed later
-            for i in range(200):  # appends 200 pieces to queue when escape is hit(initialized)
-                gameStart()
+        else:
+            coords = (0, 6)
+            piece = Piece.piece_queue.get()
+            board = Board.add_to_board(board, piece, coords)
+            if Board.piece_queue.qsize < 5:  # if the queue starts to run out of pieces,
+                Piece.add_to_queue()  # adds 100 more pieces
 
-    Placed = False
-    # when a piece is added to board, make true
-    while Placed:
-        piece_queue += 1
-        Board.add_to_board(Board, queue[piece_queue], (0, 12))
-
-    # default coordinates for where pieces drop--row 22 to 23 -- Evan
-    # do default coordinates change based on piece? what is the default position for each piece? -- Evan
-
-    # start dropping pieces -- Joseph
-    # use second iteration of board that updates with moving pieces -- Joseph
-    # falls, controlled w/ inputs-- Joseph
-    # pushdown function -- anyone with extra time??
-    # hit floor, get added to board -- devon
-    # delay between blocks hitting & being added to permanent board (not being able to control piece anymore) -- devon
-    # lines clear, added to score --Qi Chen
-    # function that tests if/how many lines have been cleared--Qi Chen
-    # gameover -- Qi Chen
-    # have game over function by start dropping peices, checks if top lines has enough space for piece

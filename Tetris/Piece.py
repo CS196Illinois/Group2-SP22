@@ -46,7 +46,7 @@ class Piece():
     piece_queue = Queue(maxsize=100)
 
     def add_to_queue(self):
-        for i in range(0, 10):
+        for i in range(0, 100):
             y = random.randint(0, 6)
             Piece.piece_queue.put(self.all_pieces[y])
 
