@@ -66,21 +66,21 @@ class Piece():
 
     def move_right(self, board, coords):
         x, y = coords
-        if Board.hit(self, (x, y+1)) == False:
+        if Board.hit(self, coords, (x, y+1)) == False:
             return (x, y+1)
         else:
             return (x, y)
 
     def move_left(self, board, coords):
         x, y = coords
-        if Board.hit(self, (x, y-1)) == False:
+        if Board.hit(self, coords, (x, y-1)) == False:
             return (x, y-1)
         else:
             return (x, y)
 
     def move_down(self, board, coords):
         x, y = coords
-        if Board.hit(self, (x, y-1)) == False:
+        if Board.hit(self, coords, (x, y-1)) == False:
             return (x+1, y)
         else:
             return (x, y)

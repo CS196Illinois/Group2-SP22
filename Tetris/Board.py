@@ -10,7 +10,7 @@ class Board:
         self.width = 10
         self.border = 2
         self.list2d = [[0 for n in range(self.width + self.border * 2)]   # use extends to replace it
-                 for m in range(self.height + self.border)]
+                       for m in range(self.height + self.border)]
         for i in range(self.width + self.border * 2):
             for j in range(self.height + self.border):
                 if i not in range(self.border, self.width + self.border) or j not in range(0, self.height):
@@ -23,14 +23,27 @@ class Board:
                 # m, n are position of current slot in  board's coordinate; x, y are that in piece's coordinate
                 self.list2d[m][n] += piece[m - x][n - y]
 
-    def hit(self, piece, coords):
-        self.add_to_board(piece, coords)  # create a temp to simulate
+    def hit(self, piece, oldCoords, newCoords):
+        self.remove_from_board(piece, oldCoords)
+        self.add_to_board(piece, newCoords)
         for m in range(self.height + self.border):
             for n in range(self.width + self.border * 2):
                 if self.list2d[m][n] % 2 != 0:
-                    self.remove_from_board(piece, coords)
+                    self.remove_from_board(piece, newCoords)
+                    self.add_to_board(piece, oldCoords)
                     return True
-        self.remove_from_board(piece, coords)
+        self.remove_from_board(piece, newCoords)
+        self.add_to_board(piece, oldCoords)
+        return False
+
+    def hitWithOutOld(self, piece, newCoords):
+        self.add_to_board(piece, newCoords)
+        for m in range(self.height + self.border):
+            for n in range(self.width + self.border * 2):
+                if self.list2d[m][n] % 2 != 0:
+                    self.remove_from_board(piece, newCoords)
+                    return True
+        self.remove_from_board(piece, newCoords)
         return False
 
     def lineClear(self):  # check if a horizontal line is fullfilled and delete it, and add scores. --Qi Chen
@@ -51,6 +64,10 @@ class Board:
             for n in range(y, y+4):
                 # m, n are position of current slot in  board's coordinate; x, y are that in piece's coordinate
                 self.list2d[m][n] = self.list2d[m][n] - piece[m - x][n - y]
-    
+
     def sprint(self):
-        print(*self.list2d, sep = "\n")
+        print(*self.list2d, sep="\n")
+
+
+if __name__ == 'main':
+    Board.add_to_board()
