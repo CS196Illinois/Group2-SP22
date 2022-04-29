@@ -27,13 +27,11 @@ score = 0
 piece = Pieces.piece_queue.get()
 board = Board()
 board.add_to_board(piece, (0, 6))
-coords = (1, 6)
+coords = (0, 6)
 Placed = False
 gameengine = GameEngine()
 while gameOn:
     # inputs
-    print(*board.list2d, sep="\n")
-
     for event in pygame.event.get():
         if event.type() == pygame.KEYDOWN:
             if event.key == pygame.K_UP:
@@ -56,11 +54,17 @@ while gameOn:
         # checks that moving down won't hit the board, if it doesnt, moves it down
         x, y = coords
         if not board.hit(piece, coords, (x+1, y)):
+            print(coords)
             gameengine.move_down(board, piece, coords)
             board.sprint()
+            print()
+            print(coords)
+            coords = (x+1, y)
         else:  # if it will hit the board by moving down, keeps where it is and starts placed sequence for new piece
             Placed = True
+            print("can't move down")
             board.sprint()
+            print()
 
     if Placed:  # if the piece before was placed 'officially' on the board, this will name a new piece and place it on the top of board
         Placed = False

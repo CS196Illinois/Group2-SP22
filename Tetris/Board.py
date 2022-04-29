@@ -28,7 +28,8 @@ class Board:
         self.add_to_board(piece, newCoords)
         for m in range(self.height + self.border):
             for n in range(self.width + self.border * 2):
-                if self.list2d[m][n] % 2 != 0:
+                if self.list2d[m][n] % 2 == 0 and self.list2d[m][n] != 0:
+                    print(self.list2d[m][n])
                     self.remove_from_board(piece, newCoords)
                     self.add_to_board(piece, oldCoords)
                     return True
